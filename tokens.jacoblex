@@ -1,0 +1,38 @@
+%moduleName Lexer
+
+%%
+
+digits = [0-9]
+word = [\w_]+
+symbol = [*/+\-<>=&|!?%^]
+
+%%
+
+<>-?{digits}*[.]?{digits}+    {
+    this.jjval = parseFloat(this.jjtext);
+    return 'num';
+}
+
+<>T {
+    this.jjval = true;
+    return 'bool';
+}
+
+<>F {
+    this.jjval = false;
+    return 'bool';
+}
+
+<>{word} {
+    return 'id';
+}
+
+<>[#:${};] {
+    return this.jjtext;
+}
+
+<>{symbol} {
+    return 'native';
+}
+
+<>\s+ { }

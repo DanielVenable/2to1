@@ -1,0 +1,37 @@
+%moduleName Parse
+
+Program = Start { Statement } End function (_, statements) {
+    this.statements = statements;
+};
+
+Input = 'id' | 'num' | 'bool' | '#';
+
+Call = ('native' | '$') { Input } ';' function (func, values) {
+    return new imports.Call(func, values);
+};
+
+Statement = 'id' ':' Call function (name, _, call) {
+    return new imports.Statement(name, call);
+};
+
+Start = First '{' { Base } '}' function (_, _, bases) {
+    this.bases = bases;
+};
+
+First = ['id' '$'] 'num' function (name, prob) {
+    this.first = new imports.Base(name[0], prob);
+};
+
+Base = 'id' ':' ('num' | 'bool') function (name, _, value) {
+    return new imports.Base(name, null, value);
+} | 'id' '$' 'num' function (name, _, prob) {
+    return new imports.Base(name, prob);
+};
+
+End = Input '{' { Input } '}' function (ans, _, inputs) {
+    if (inputs.length !== this.bases.length) {
+        throw new Error('Must input and ouput same number of parameters');
+    }
+    this.ans = ans;
+    this.end = inputs;
+};

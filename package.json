@@ -1,0 +1,30 @@
+{
+  "name": "2to1",
+  "version": "1.0.0",
+  "description": "A server that lets you create stategies for the game 2:1 and plays them against each other",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "node strategy.js",
+    "start": "node server.js",
+    "build": "jacob -t tokens.jacoblex -l lexer.cjs -g grammar.jacobgram -p parser.cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielVenable/2to1.git"
+  },
+  "author": "Daniel Venable",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DanielVenable/2to1/issues"
+  },
+  "homepage": "https://github.com/DanielVenable/2to1#readme",
+  "dependencies": {
+    "jacob": "1.0.5",
+    "mongodb": "^4.9.1",
+    "ws": "8.8.1"
+  },
+  "devDependencies": {
+    "dotenv": "16.0.1"
+  }
+}

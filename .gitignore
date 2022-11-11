@@ -1,0 +1,4 @@
+.env
+lexer.cjs
+parser.cjs
+node_modules

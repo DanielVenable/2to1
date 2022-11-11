@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="109mm"
+   height="103.7mm"
+   viewBox="0 0 109 103.7"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs>
+    <g id="block-0">
+      <rect
+       style="fill:#008000;fill-opacity:1;stroke:#000000;stroke-width:1"
+       width="108"
+       height="72"
+       rx="8.424017"
+       ry="9.7699375"
+       x="-54"
+       y="-36"
+       id="rect859" />
+      <circle
+       style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:0.7"
+       cx="0"
+       cy="42"
+       r="8"
+       id="circle861" />
+    </g>
+    <g id="block-1">
+      <rect
+       style="fill:#0000ff;stroke:#000000;stroke-width:0.7"
+       width="11"
+       height="18.502136"
+       x="-5.5"
+       y="-53"
+       id="rect853" />
+      <use href="#block-0" />
+    </g>
+    <g id="block-2">
+      <rect
+       style="fill:#0000ff;stroke:#000000;stroke-width:0.7"
+       width="11"
+       height="18.502136"
+       x="27.5"
+       y="-53"
+       id="rect855" />
+      <rect
+       style="fill:#0000ff;stroke:#000000;stroke-width:0.7"
+       width="11"
+       height="18.502136"
+       x="-38.5"
+       y="-53"
+       id="rect857" />
+      <use href="#block-0" />
+    </g>
+    <g id="block-3">
+      <rect
+       style="fill:#0000ff;stroke:#000000;stroke-width:0.7"
+       width="11"
+       height="18.502136"
+       x="27.5"
+       y="-53"
+       id="rect855" />
+      <rect
+       style="fill:#0000ff;stroke:#000000;stroke-width:0.7"
+       width="11"
+       height="18.502136"
+       x="-38.5"
+       y="-53"
+       id="rect857" />
+      <rect
+       style="fill:#0000ff;stroke:#000000;stroke-width:0.7"
+       width="11"
+       height="18.502136"
+       x="-5.5"
+       y="-53"
+       id="rect853" />
+      <use href="#block-0" />
+    </g>
+  </defs>
+</svg>

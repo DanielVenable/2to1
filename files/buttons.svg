@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="200mm"
+   viewBox="0 0 210 200"
+   version="1.1"
+   id="svg5"
+   class="playing"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <style
+     id="style2">
+     #yes-button {
+       fill:#00ff00;
+       cursor:pointer;
+     }
+     #no-button {
+       fill:#ff0000;
+       cursor:pointer;
+     }
+     .playing #yes-button:active {
+       fill:#00d400;
+     }
+     .playing #no-button:active {
+       fill:#d40000;
+     }
+     text {
+       pointer-events: none;
+     }
+     #they-pressed[data-value=&quot;?&quot;] {
+       fill:#b3b3b3;
+     }
+     #they-pressed[data-value=&quot;yes&quot;] {
+       fill:#00ff00;
+     }
+     #they-pressed[data-value=&quot;no&quot;] {
+       fill:#ff0000;
+     }
+     #yes-text:not([data-value=&quot;yes&quot;] ~ *),
+     #no-text:not([data-value=&quot;no&quot;] ~ *),
+     #question-text:not([data-value=&quot;?&quot;] ~ *),
+     .playing #layer2 {
+       display: none;
+     }
+     #restart-button {
+       cursor: pointer;
+       fill: #00ff00;
+     }
+     #restart-button:active {
+       fill: #00d400;
+     }
+  </style>
+  <defs
+     id="defs2">
+    <rect
+       x="142.32932"
+       y="511.20142"
+       width="209.57655"
+       height="192.45451"
+       id="rect523" />
+  </defs>
+  <g
+     id="layer1">
+    <circle
+       style="fill:#008000"
+       id="path277-36"
+       cx="49"
+       cy="140.01665"
+       r="49" />
+    <circle
+       style="fill:#800000"
+       id="path277-36-7"
+       cx="161.0096"
+       cy="140.01665"
+       r="49" />
+    <circle
+       id="yes-button"
+       cx="49"
+       cy="140.01665"
+       r="47.294769" />
+    <circle
+       id="no-button"
+       cx="161.0096"
+       cy="140.01665"
+       r="47.294769" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-7.491468,-9.1961036)"
+       id="text521"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:85.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect523);shape-padding:3.95081;display:inline;fill:#000000"><tspan
+         x="146.2793"
+         y="590.65231"
+         id="tspan511">Yes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;stroke-width:0.264583"
+       x="147.80531"
+       y="147.32193"
+       id="text529"><tspan
+         id="tspan527"
+         style="fill:#000000;stroke-width:0.264583"
+         x="147.80531"
+         y="147.32193">No</tspan></text>
+    <circle
+       style="fill:#666666;stroke-width:0.699196"
+       id="path277-36-7-3"
+       cx="105.0934"
+       cy="59.573112"
+       r="34.260593" />
+    <circle
+       id="they-pressed"
+       data-value="?"
+       cx="105.0934"
+       cy="59.573112"
+       r="33.068302" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.7863px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:37.2417;fill:#000000;stroke-width:0.184995;image-rendering:auto"
+       x="95.861015"
+       y="64.680939"
+       id="question-text"
+       transform="translate(5.3019851,1.5410138)"><tspan
+         x="95.861015"
+         y="64.680939"
+         id="tspan513">?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.7863px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:37.2417;fill:#000000;stroke-width:0.184995;image-rendering:auto"
+       x="95.861015"
+       y="64.680939"
+       id="yes-text"
+       transform="translate(-3.0799935,1.7629048)"><tspan
+         x="95.861015"
+         y="64.680939"
+         id="tspan515">Yes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.7863px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:37.2417;fill:#000000;stroke-width:0.184995;image-rendering:auto"
+       x="95.861015"
+       y="64.680939"
+       id="no-text"
+       transform="translate(-0.54112227,1.7233167)"><tspan
+         x="95.861015"
+         y="64.680939"
+         id="tspan517">No</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:14.5649px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';fill:#000000;stroke-width:0.170682"
+       x="72.302795"
+       y="14.942948"
+       id="text434"><tspan
+         id="tspan432"
+         style="fill:#000000;stroke-width:0.170682"
+         x="72.302795"
+         y="14.942948">Score: </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:14.5649px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';fill:#000000;stroke-width:0.170682"
+       x="118.98041"
+       y="15.389907"
+       id="text434-3"><tspan
+         id="score"
+         style="fill:#000000;stroke-width:0.170682"
+         x="118.98041"
+         y="15.389907">0</tspan></text>
+  </g>
+  <g
+     id="layer2">
+    <rect
+       style="fill:#ffff00;stroke:#aa8800;stroke-width:0.8"
+       id="rect202"
+       width="109.5433"
+       height="64.07489"
+       x="49.796577"
+       y="53.478798"
+       ry="9.7699375" />
+    <text
+       xml:space="preserve"
+       style="font-size:22.5778px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';white-space:pre;inline-size:129.046;fill:#000000;stroke-width:0.264583"
+       x="87.219276"
+       y="85.715118"
+       id="text364"
+       transform="matrix(0.78673645,0,0,0.78673645,-14.105834,9.7032176)"><tspan
+         x="87.219276"
+         y="85.715118"
+         id="tspan519">Play again?</tspan></text>
+    <rect
+       style="stroke:#008000;stroke-width:0.8"
+       id="restart-button"
+       width="61.920853"
+       height="26.110306"
+       x="73.935249"
+       y="87.536797"
+       rx="8.424017"
+       ry="9.7699375" />
+    <text
+       xml:space="preserve"
+       style="font-size:18.708px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';fill:#000000;stroke-width:0.219234"
+       x="80.971588"
+       y="106.85127"
+       id="text783"><tspan
+         id="tspan781"
+         style="fill:#000000;stroke-width:0.219234"
+         x="80.971588"
+         y="106.85127">Sure!</tspan></text>
+  </g>
+</svg>

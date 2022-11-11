@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2:1</title>
+    <style>
+        #form {
+            display: none;
+        }
+
+        .text #form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #editor {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .text #editor {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text">
+    <svg id="editor" height="1000" width="1000">
+        <style>
+            text {
+                font-size:22.5778px;font-family:sans-serif;fill:#000000;
+            }
+        </style>
+    </svg>
+
+    <div id="form">
+        <div>
+            <input id="name">
+        </div>
+        <div>
+            <textarea id="text" cols="30" rows="10"></textarea>
+        </div>
+        <div>
+            <button id="submit">submit</button>
+        </div>
+    </div>
+</body>
+<script type="module">
+    {
+        const name = document.querySelector('#name'),
+            text = document.querySelector('#text');
+        document.querySelector('#submit').addEventListener('click', () => {
+            fetch('/', { method: 'POST', body: JSON.stringify({
+                name: name.value,
+                text: text.value
+            })}).then(console.log, console.error);
+        });
+    }
+</script>
+</html>
