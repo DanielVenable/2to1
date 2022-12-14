@@ -28,7 +28,7 @@
         }
     </style>
 </head>
-<body class="text">
+<body>
     <svg id="editor" height="1000" width="1000">
         <style>
             text {
@@ -59,6 +59,30 @@
                 text: text.value
             })}).then(console.log, console.error);
         });
+    }
+
+    {
+        // represents one line in the program, displayed as a block.
+        class Block {
+            constructor(size) {
+                if (!Block.validSizes.has(size)) {
+                    throw new RangeError('size must be 0, 1, 2, or 3');
+                }
+                this.size = size;
+                this.elem = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+                this.elem.setAttribute('href', `block.svg#block-${size}`);
+                Block.svg.append(this.elem);
+            }
+
+            // sets the position
+            move(x, y) {
+                this.elem.setAttribute('x', x);
+                this.elem.setAttribute('y', y);
+            }
+
+            static validSizes = new Set([0,1,2,3]);
+            static svg = document.querySelector('svg');
+        }
     }
 </script>
 </html>
