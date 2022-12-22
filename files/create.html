@@ -4,43 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="create.css">
     <title>2:1</title>
-    <style>
-        #form {
-            display: none;
-        }
-
-        .text #form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        #editor {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-
-        .text #editor {
-            display: none;
-        }
-    </style>
 </head>
 <body>
-    <svg id="editor">
-        <style>
-            text {
-                font-size: 22.5778px;
-                font-family: sans-serif;
-                fill: #000000;
-                text-anchor: middle;
-                dominant-baseline: central;
-                user-select: none;
-            }
-        </style>
-    </svg>
+    <svg id="editor"></svg>
 
     <div id="form">
         <div>
@@ -53,6 +21,24 @@
             <button id="submit">submit</button>
         </div>
     </div>
+
+    <div id="menu" hidden>
+        <button data-symbol="&lt">&lt;</button>
+        <button data-symbol="&gt">&gt;</button>
+        <button data-symbol="*">&times;</button>
+        <button data-symbol="/">&divide;</button>
+        <button data-symbol="+">+</button>
+        <button data-symbol="-">-</button>
+        <button data-symbol="=">=</button>
+        <button data-symbol="&amp;">and</button>
+        <button data-symbol="|">or</button>
+        <button data-symbol="!">not</button>
+        <button data-symbol="?">if</button>
+        <button data-symbol="%">modulo</button>
+        <button data-symbol="^">exp</button>
+        <button data-></button>
+    </div>
+
     <script type="module" src="./create.js"></script>
 </body>
 </html>

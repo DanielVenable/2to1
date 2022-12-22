@@ -1,0 +1,67 @@
+html {
+    overflow: hidden;
+}
+
+#form {
+    display: none;
+}
+
+.text #form {
+    display: flex;
+    flex-direction: column;
+}
+
+#editor {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.text #editor {
+    display: none;
+}
+
+#menu:not([hidden]) {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    border: 2px solid black;
+    border-radius: 2px;
+    user-select: none;
+    z-index: 1;
+}
+
+#menu button {
+    text-align: center;
+    background-color: aquamarine;
+    padding: 0 3px 0 3px;
+    cursor: pointer;
+}
+
+#menu button:hover {
+    background-color: aqua;
+}
+
+#menu button:active {
+    background-color: #00e4e4;
+}
+
+/* for svg: */
+
+text {
+    font-size: 22.5778px;
+    font-family: sans-serif;
+    fill: #000000;
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+}
+
+line {
+    stroke: #000000;
+    stroke-width: 2px;
+    stroke-linecap: round;
+}
