@@ -13,7 +13,17 @@ function textBoxListen() {
 // represents an input of a block
 class Input {
     y = -53;
-    path = null;
+    #path = null;
+
+    get path() {
+        return this.#path;
+    }
+
+    set path(value) {
+        Block.owner.get(this.#path)?.removePath(this.#path);
+        this.#path = value;
+        this.movePath();
+    }
 
     /**
      * @param {-1 | 0 | 1} pos where the input is placed on the block
@@ -31,10 +41,11 @@ class Input {
 
     /** moves the end of the path to the correct position */
     movePath() {
-        this.path?.setAttribute('x2', this.x + this.block.x);
-        this.path?.setAttribute('y2', this.y + this.block.y);
+        this.#path?.setAttribute('x2', this.x + this.block.x);
+        this.#path?.setAttribute('y2', this.y + this.block.y);
     }
 
+    /** @type {WeakMap<SVGUseElement, Input>} */
     static owner = new WeakMap;
 }
 
@@ -107,9 +118,17 @@ class Block {
         return use;
     }
 
+    /** removes a path */
+    removePath(path) {
+        if (this.outPaths.delete(path)) {
+            path.remove();
+        }
+    }
+
     static #pathStartX = 0; // same as "cx" in block.svg#circle
     static #pathStartY = 42; // same as "cy" in block.svg#circle
     static SVGRoot = document.querySelector('svg');
+    /** @type {WeakMap<SVGElement, Block>} */
     static owner = new WeakMap;
 }
 
@@ -184,14 +203,21 @@ function dragNDrop(SVGRoot) {
     function drop(event) {
         event.preventDefault();
 
+        const input = Input.owner.get(event.target);
+
         // do this only if a line is being dragged
         if (isBlock === false) {
-            const input = Input.owner.get(event.target);
-
             if (input) { // the line is dropped on an input
                 input.path = dragTarget;
-                input.movePath();
+            } else {
+                Block.owner.get(dragTarget).removePath(dragTarget);
             }
+        } else if (dragTarget === null) {
+            // delete a path when they click an input or path
+            if (input) {
+                input.path = null;
+            }
+            Block.owner.get(event.target)?.removePath(event.target);
         }
 
         // stop dragging anything when the mouse is lifted
