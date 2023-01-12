@@ -23,30 +23,49 @@ html {
     display: none;
 }
 
-#menu:not([hidden]) {
-    position: absolute;
+.menu:not([hidden]) {
     display: flex;
-    flex-direction: column;
     width: fit-content;
-    border: 2px solid black;
-    border-radius: 2px;
-    user-select: none;
-    z-index: 1;
+    position: absolute;
 }
 
-#menu button {
+#menu {
+    flex-direction: column;
+    border: 2px solid black;
+    border-radius: 2px;
+    z-index: 2;
+}
+
+button {
     text-align: center;
     background-color: aquamarine;
     padding: 0 3px 0 3px;
     cursor: pointer;
+    user-select: none;
 }
 
-#menu button:hover {
+button:hover {
     background-color: aqua;
 }
 
-#menu button:active {
+button:active {
     background-color: #00e4e4;
+}
+
+#top-menu {
+    align-items: center;
+    z-index: 1;
+    top: 10px;
+    left: 10px;
+}
+
+#top-menu > * {
+    margin-right: 5px;
+}
+
+.centerflex {
+    display: flex;
+    align-items: center;
 }
 
 /* for svg: */
@@ -64,4 +83,14 @@ line {
     stroke: #000000;
     stroke-width: 2px;
     stroke-linecap: round;
+}
+
+foreignObject {
+    transform: translate(-49px, -15px);
+    width: 100px;
+    height: 30px;
+}
+
+foreignObject input {
+    width: 90px;
 }

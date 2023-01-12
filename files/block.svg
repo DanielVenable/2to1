@@ -31,5 +31,15 @@
        y="-53"
        id="rect853" />
     </g>
+    <g id="number">
+      <foreignObject width="50" height="50">
+      <div xmlns="http://www.w3.org/1999/xhtml">test</div>
+      <!--
+
+        <input xmlns="http://www.w3.org/1999/xhtml" type="number" value="0"/>
+        <div>hi</div>
+      -->
+      </foreignObject>
+    </g>
   </defs>
 </svg>

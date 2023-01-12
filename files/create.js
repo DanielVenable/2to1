@@ -1,13 +1,7 @@
-// submit programs entered in the textbox
-function textBoxListen() {
-    const name = document.querySelector('#name'),
-        text = document.querySelector('#text');
-    document.querySelector('#submit').addEventListener('click', () => {
-        fetch('/', { method: 'POST', body: JSON.stringify({
-            name: name.value,
-            text: text.value
-        })}).then(console.log, console.error);
-    });
+// submits a program
+function submit(name, text) {
+    return console.log(name, text);
+    return fetch('/', { method: 'POST', body: JSON.stringify({ name, text }) });
 }
 
 // represents an input of a block
@@ -20,8 +14,11 @@ class Input {
     }
 
     set path(value) {
-        Block.owner.get(this.#path)?.removePath(this.#path);
+        this.connected?.removePath(this.#path);
         this.#path = value;
+        if (value) {
+            Input.owner.set(value, this);
+        }
         this.movePath();
     }
 
@@ -39,10 +36,20 @@ class Input {
         Input.owner.set(this.elem, this);
     }
 
+    get connected() {
+        return Block.owner.get(this.#path);
+    }
+
     /** moves the end of the path to the correct position */
     movePath() {
         this.#path?.setAttribute('x2', this.x + this.block.x);
         this.#path?.setAttribute('y2', this.y + this.block.y);
+    }
+
+    /** removes a path */
+    removePath() {
+        Input.owner.delete(this.#path);
+        this.#path = null;
     }
 
     /** @type {WeakMap<SVGUseElement, Input>} */
@@ -51,26 +58,61 @@ class Input {
 
 // represents one line in the program, displayed as a block.
 class Block {
-    outPaths = new Set;
+    #outPaths = new Set;
+    #name;
+    #input;
     x = 0;
     y = 0;
+    group = this.createSVG('g', Block.SVGRoot);
 
     constructor(symbol, text) {
-        this.group = this.createSVG('g', Block.SVGRoot);
+        this.symbol = symbol;
 
         switch (symbol) {
             case '!':
+            case '$':
+            case 'end':
+            case 'param':
                 this.inputs = [new Input(0, this)];
                 break;
             case '?':
                 this.inputs = [new Input(-1, this), new Input(0, this), new Input(1, this)];
                 break;
+            case '#':
+            case 'number':
+                this.inputs = [];
+                Block.starts.add(this);
+                break;
             default:
                 this.inputs = [new Input(-1, this), new Input(1, this)];
         }
 
+        if (symbol === 'end') {
+            if (Block.end) {
+                throw new Error('cannot have two ends in the same program');
+            }
+            Block.end = this;
+        }
+
         this.block = this.createUse('block');
         this.circle = this.createUse('circle');
+
+        if (symbol === '#') {
+            this.#name = '#';
+            this.#createText(text);
+        } else if (symbol === 'number') {
+            const foreign = this.createSVG('foreignObject');
+            this.#input = document.createElement('input');
+            this.#input.type = 'number';
+            foreign.append(this.#input);
+        } else {
+            this.#name = 'a' + Block.#count++;
+            this.#createText(text);
+        }
+    }
+
+    /** creates a text object */
+    #createText(text) {
         this.text = this.createSVG('text');
         this.text.textContent = text;
     }
@@ -80,7 +122,7 @@ class Block {
         this.x = x;
         this.y = y;
         this.group.setAttribute('transform', `translate(${x}, ${y})`);
-        for (const path of this.outPaths) {
+        for (const path of this.#outPaths) {
             path.setAttribute('x1', x + Block.#pathStartX);
             path.setAttribute('y1', y + Block.#pathStartY);
         }
@@ -92,7 +134,7 @@ class Block {
     /** creates a path for connecting to other blocks */
     createPath() {
         const path = this.createSVG('line', Block.SVGRoot);
-        this.outPaths.add(path);
+        this.#outPaths.add(path);
         path.setAttribute('x1', this.x + Block.#pathStartX);
         path.setAttribute('x2', this.x + Block.#pathStartX);
         path.setAttribute('y1', this.y + Block.#pathStartY);
@@ -120,16 +162,41 @@ class Block {
 
     /** removes a path */
     removePath(path) {
-        if (this.outPaths.delete(path)) {
+        if (this.#outPaths.delete(path)) {
+            Input.owner.get(path)?.removePath();
             path.remove();
+        }
+    }
+
+    get connected() {
+        const result = [];
+        for (const path of this.#outPaths) {
+            result.push(Input.owner.get(path).block);
+        }
+        return result;
+    }
+
+    /** @returns {String} the name to be displayed when compiling */
+    get value() {
+        if (this.#input) {
+            if (isNaN(this.#input.value)) {
+                throw 'value must be a number';
+            } else {
+                return String(parseFloat(this.#input.value));
+            }
+        } else {
+            return this.#name;
         }
     }
 
     static #pathStartX = 0; // same as "cx" in block.svg#circle
     static #pathStartY = 42; // same as "cy" in block.svg#circle
+    static #count = 0;
     static SVGRoot = document.querySelector('svg');
     /** @type {WeakMap<SVGElement, Block>} */
     static owner = new WeakMap;
+    static starts = new Set;
+    static end = null;
 }
 
 // allows dragging and dropping
@@ -143,8 +210,6 @@ function dragNDrop(SVGRoot) {
     SVGRoot.addEventListener('mousedown', grab);
     SVGRoot.addEventListener('touchstart', grab);
     function grab(event) {
-        event.preventDefault();
-
         // only allow leftclicks for dragging
         if (event.button === 0) {
             const group = event.target.parentElement;
@@ -179,8 +244,6 @@ function dragNDrop(SVGRoot) {
     document.addEventListener('mousemove', drag);
     document.addEventListener('touchmove', drag);
     function drag(event) {
-        event.preventDefault();
-
         // account for zooming and panning
         getTrueCoords(event);
 
@@ -201,8 +264,6 @@ function dragNDrop(SVGRoot) {
     document.addEventListener('touchend', drop);
     document.addEventListener('touchcancel', drop);
     function drop(event) {
-        event.preventDefault();
-
         const input = Input.owner.get(event.target);
 
         // do this only if a line is being dragged
@@ -244,8 +305,10 @@ function dragNDrop(SVGRoot) {
 function menu(SVGRoot) {
     const menuElem = document.querySelector('#menu');
 
-    SVGRoot.addEventListener('contextmenu', event => {
-        event.preventDefault(); // don't show the normal context menu
+    // document instead of SVGroot to display menu when they click anywhere, not just the svg
+    document.addEventListener('contextmenu', event => {
+        // don't show the normal context menu
+        event.preventDefault();
 
         // place the menu where you clicked
         menuElem.style.left = event.pageX + 'px';
@@ -255,7 +318,7 @@ function menu(SVGRoot) {
         menuElem.hidden = false;
     });
 
-    // a list of all the blocks
+    /** a list of all the blocks */
     const list = [];
 
     // creates a block when they click a button from the menu
@@ -265,8 +328,6 @@ function menu(SVGRoot) {
             block.move(event.pageX, event.pageY);
             list.push(block);
             menuElem.hidden = true;
-        } else if (true) {
-
         }
     });
 
@@ -274,15 +335,81 @@ function menu(SVGRoot) {
     SVGRoot.addEventListener('mousedown', () => {
         menuElem.hidden = true;
     });
+
+    // enable actions on top menu
+    document.querySelector('#compile').addEventListener('click', () => {
+        try {
+            submit(document.querySelector('#name').value, compile(Block.starts));
+        } catch (e) {
+            if (e === 'no end') {
+                alert("Your program must have an end block.");
+            } else if (e === 'not connected') {
+                alert("Make sure all blocks have something connected to their inputs.");
+            } else if (e === 'loop') {
+                alert("Make sure your program has no loops");
+            } else {
+                throw e;
+            }
+        }
+    });
 }
 
-// make the svg the size of the window
+/** make the svg the size of the window */
 function resize(SVGRoot) {
     SVGRoot.setAttribute('width', window.innerWidth);
     SVGRoot.setAttribute('height', window.innerHeight);
 }
 
-textBoxListen();
+/** compiles a set of blocks into a program
+ * @param {Set<Block>} starts
+ */ 
+function compile(starts) {
+    if (Block.end === null) {
+        throw 'no end';
+    }
+
+    const blocks = new Set(starts);
+    const done = new Set;
+    const program = [];
+
+    outer: while (true) {
+        let isStuck = true;
+        blockLoop: for (const block of blocks) {
+            if (!starts.has(block)) {
+                const params = [];
+                for (const { connected } of block.inputs) {
+                    if (!done.has(connected)) {
+                        continue blockLoop;
+                    }
+                    params.push(connected.value);
+                }
+
+                if (block === Block.end) {
+                    program.push(`${params[0]}{}`);
+                    break outer;
+                }
+
+                program.push(`${block.value}:${block.symbol} ${params.join(' ')};\n`);
+            }
+
+            block.connected.forEach(a => blocks.add(a));
+            blocks.delete(block);
+            done.add(block);
+            isStuck = false;
+        }
+        if (isStuck) {
+            // this happens when it went through the entire set without doing anything.
+            if (blocks.size) {
+                throw 'loop';
+            } else {
+                throw 'not connected';
+            }
+        }
+    }
+
+    return `${document.querySelector('#prob').value / 100}{}\n${program.join('')}`;
+}
+
 resize(Block.SVGRoot);
 window.addEventListener('resize', () => resize(Block.SVGRoot));
 dragNDrop(Block.SVGRoot);
