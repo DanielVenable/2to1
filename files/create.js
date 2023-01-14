@@ -61,9 +61,10 @@ class Block {
     #outPaths = new Set;
     #name;
     #input;
+    isParam = false;
     x = 0;
     y = 0;
-    group = this.createSVG('g', Block.SVGRoot);
+    group = this.createSVG('g', Block.#blocks);
 
     constructor(symbol, text) {
         this.symbol = symbol;
@@ -80,6 +81,8 @@ class Block {
                 break;
             case '#':
             case 'number':
+            case 'T':
+            case 'F':
                 this.inputs = [];
                 Block.starts.add(this);
                 break;
@@ -95,20 +98,50 @@ class Block {
         }
 
         this.block = this.createUse('block');
-        this.circle = this.createUse('circle');
 
-        if (symbol === '#') {
-            this.#name = '#';
-            this.#createText(text);
-        } else if (symbol === 'number') {
-            const foreign = this.createSVG('foreignObject');
-            this.#input = document.createElement('input');
-            this.#input.type = 'number';
-            foreign.append(this.#input);
+        if (symbol === 'end') {
+            this.#makeParam();
+        } else if (symbol === 'param') {
+            this.#makeParam();
+            this.#createInput(10);
         } else {
-            this.#name = 'a' + Block.#count++;
-            this.#createText(text);
+            this.circle = this.createUse('circle');
         }
+
+        switch (symbol) {
+            case '#':
+            case 'T':
+            case 'F':
+                this.#name = symbol;
+                this.#createText(text);
+                break;
+            case 'number':
+                this.#createInput(-15);
+                break;
+            default:
+                this.#name = 'a' + Block.#count++;
+                this.#createText(text);
+        }
+    }
+
+    /** makes the block a param */
+    #makeParam() {
+        this.circle = this.createUse('param');
+        this.isParam = true;
+        if (this !== Block.end) {
+            Block.params.push(this);
+            Block.starts.add(this);
+        }
+    }
+
+    /** creates a foreignObject containing an input */
+    #createInput(y, type = 'number') {
+        const foreign = this.createSVG('foreignObject');
+        this.#input = document.createElement('input');
+        this.#input.type = type;
+        this.#input.value = 0;
+        foreign.append(this.#input);
+        foreign.style.transform = `translate(-49px, ${y}px)`;
     }
 
     /** creates a text object */
@@ -133,7 +166,7 @@ class Block {
 
     /** creates a path for connecting to other blocks */
     createPath() {
-        const path = this.createSVG('line', Block.SVGRoot);
+        const path = this.createSVG('line', Block.#lines);
         this.#outPaths.add(path);
         path.setAttribute('x1', this.x + Block.#pathStartX);
         path.setAttribute('x2', this.x + Block.#pathStartX);
@@ -176,26 +209,32 @@ class Block {
         return result;
     }
 
-    /** @returns {String} the name to be displayed when compiling */
+    /** @returns {String} the value of the input */
     get value() {
-        if (this.#input) {
-            if (isNaN(this.#input.value)) {
-                throw 'value must be a number';
-            } else {
-                return String(parseFloat(this.#input.value));
-            }
+        if (isNaN(this.#input?.value)) {
+            throw 'value must be a number';
         } else {
-            return this.#name;
+            return String(parseFloat(this.#input.value));
         }
+    }
+
+    /** @returns {String} the display name when compiling */
+    get name() {
+        return this.#name ?? this.value;
     }
 
     static #pathStartX = 0; // same as "cx" in block.svg#circle
     static #pathStartY = 42; // same as "cy" in block.svg#circle
     static #count = 0;
-    static SVGRoot = document.querySelector('svg');
+    static #blocks = document.querySelector('#blocks');
+    static #lines = document.querySelector('#lines');
+
     /** @type {WeakMap<SVGElement, Block>} */
     static owner = new WeakMap;
+
+    // for compiling
     static starts = new Set;
+    static params = [];
     static end = null;
 }
 
@@ -339,7 +378,7 @@ function menu(SVGRoot) {
     // enable actions on top menu
     document.querySelector('#compile').addEventListener('click', () => {
         try {
-            submit(document.querySelector('#name').value, compile(Block.starts));
+            submit(document.querySelector('#name').value, compile(Block));
         } catch (e) {
             if (e === 'no end') {
                 alert("Your program must have an end block.");
@@ -360,36 +399,43 @@ function resize(SVGRoot) {
     SVGRoot.setAttribute('height', window.innerHeight);
 }
 
-/** compiles a set of blocks into a program
- * @param {Set<Block>} starts
- */ 
-function compile(starts) {
-    if (Block.end === null) {
+/** compiles a set of blocks into a program */
+function compile({ starts, params, end }) {
+    if (end === null) {
         throw 'no end';
     }
 
     const blocks = new Set(starts);
     const done = new Set;
     const program = [];
+    let usedEnd = false;
+
+    // this allows programs that use the end of last time to work
+    end.connected.forEach(a => blocks.add(a));
 
     outer: while (true) {
         let isStuck = true;
         blockLoop: for (const block of blocks) {
+            if (done.has(block)) {
+                continue;
+            }
             if (!starts.has(block)) {
-                const params = [];
+                const inputs = [];
                 for (const { connected } of block.inputs) {
-                    if (!done.has(connected)) {
+                    if (connected === end) {
+                        usedEnd = true;
+                    } else if (!done.has(connected)) {
                         continue blockLoop;
                     }
-                    params.push(connected.value);
+                    inputs.push(connected.name);
                 }
 
-                if (block === Block.end) {
-                    program.push(`${params[0]}{}`);
+                if (block === end) {
+                    program.push(`${inputs[0]}`);
                     break outer;
                 }
 
-                program.push(`${block.value}:${block.symbol} ${params.join(' ')};\n`);
+                program.push(`${block.name}:${block.symbol} ${inputs.join(' ')};`);
             }
 
             block.connected.forEach(a => blocks.add(a));
@@ -407,10 +453,26 @@ function compile(starts) {
         }
     }
 
-    return `${document.querySelector('#prob').value / 100}{}\n${program.join('')}`;
+    const nextTime = [];
+    for (const param of params) {
+        const parent = param.inputs[0].connected;
+        if (!done.has(parent)) {
+            throw 'not connected';
+        }
+        nextTime.push(parent.name);
+    }
+
+    return (usedEnd ? end.name + '$' : '') +
+        document.querySelector('#prob').value / 100 +
+        '{' + params.map(a => a.name + ':' + a.value).join(' ') + '}\n' +
+        program.join('\n') +
+        '{' + nextTime.join(' ') + '}';
 }
 
-resize(Block.SVGRoot);
-window.addEventListener('resize', () => resize(Block.SVGRoot));
-dragNDrop(Block.SVGRoot);
-menu(Block.SVGRoot);
+{
+    const SVGRoot = document.querySelector('svg');
+    resize(SVGRoot);
+    window.addEventListener('resize', () => resize(SVGRoot));
+    dragNDrop(SVGRoot);
+    menu(SVGRoot);
+}
