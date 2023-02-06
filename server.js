@@ -10,11 +10,11 @@ async function handleRequest() {
         files.set(`/${file}`, readFile(`files/${file}`));
     }
 
-    const contentTypes = new Map([[
+    const contentTypes = new Map([
         ['.svg', 'image/svg+xml'],
         ['.js', 'text/javascript'],
         ['.css', 'text/css']
-    ]]);
+    ]);
 
     return async function handleRequest(req, res) {
         if (req.method === 'GET') {
