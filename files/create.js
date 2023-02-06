@@ -1,7 +1,10 @@
 // submits a program
 function submit(name, text) {
-    return console.log(name, text);
-    return fetch('/', { method: 'POST', body: JSON.stringify({ name, text }) });
+    if (!name) {
+        throw 'no name';
+    }
+
+    fetch('/', { method: 'POST', body: JSON.stringify({ name, text }) });
 }
 
 // represents an input of a block
@@ -386,6 +389,8 @@ function menu(SVGRoot) {
                 alert("Make sure all blocks have something connected to their inputs.");
             } else if (e === 'loop') {
                 alert("Make sure your program has no loops");
+            } else if (e === 'no name') {
+                alert("Make sure you program has a name");
             } else {
                 throw e;
             }
