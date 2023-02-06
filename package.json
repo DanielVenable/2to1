@@ -1,6 +1,6 @@
 {
   "name": "2to1",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A server that lets you create stategies for the game 2:1 and plays them against each other",
   "main": "server.js",
   "type": "module",
