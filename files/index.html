@@ -4,25 +4,35 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
     <title>2:1</title>
-    <style>
-        body {
-            display: flex;
-        }
-        #leaderboard {
-            display: flex;
-            flex-direction: column;
-        }
-    </style>
 </head>
 <body>
-    <div id="leaderboard">
-
+    <div id="navbar">
+        <a href="/create" id="create">Create your own strategy</a>
+        <a href="/play" id="play">Play a random strategy</a>
     </div>
-    <div>
-        <a href="./how-it-works">How it works</a>
-        <a href="./create">Create your own strategy</a>
-        <a href="./play">Play a random strategy</a>
+    <div class="container">
+        <div>
+            <div id="leaderboard">
+                <strong>Leaderboard:</strong>
+                <!-- rankings is inserted here -->
+            </div>
+        </div>
+        <div>
+            <div id="how-to">
+                <p>
+                    2 to 1 is a two player game.
+                    Each player picks either yes or no.
+                    If one player picked yes and the other picked no,
+                    the player that picked yes gets 2 points
+                    and the player who picked no gets 1 point.
+                    If both players picked the same thing, no one gets any points.
+                    This is repeated for a certain number of rounds.
+                    Both players try to get as many points as they can.
+                </p>
+            </div>
+        </div>
     </div>
 </body>
 <script type="module">
